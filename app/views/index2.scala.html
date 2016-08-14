@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="author" content="Salah Ahmed">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <!-- bootstrap css -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- personal stylesheet -->
+        <link rel="stylesheet" href="">
+	</head>
+	<body>
+
+		<div class="container-fluid">
+			<h1>Translate your number :)</h1>
+			<label for="dictionary">Dictionary</label>
+			<textarea rows="10" name="dictionary" class="inputs form-control"></textarea>
+			<label for="number">Phone Number</label>
+			<div class="form-inline">
+				<input id="number" type="number" class="inputs n-3 form-control">
+				<input id="number2" type="number" class="inputs n-3 form-control">
+				<input id="number3" type="number" class="inputs n-4 form-control">
+				<button id="submit" class="form-control">submit</button>
+			</div>
+			<div id="result"><table class="table-hover"><thead><tr><th id="table-header"></th></tr></thead><tbody id="table-body"></tbody></table></div>
+
+		</div>
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- bootstrap js -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <!-- personal js -->
+		<script>
+			$('.inputs').on('keydown keyup', function(e){
+				var num = 3;
+				if($(this).hasClass("n-4")) num = 4;
+				if(e.keyCode == 8) return
+				if($(this).val().length >= num){
+					e.preventDefault()
+					$(this).next().focus();	
+				}
+			});
+			$('#submit').click(function() {
+				var number = $('#number').val() + $('#number2').val() + $('#number3').val()
+				$.getJSON('/get_words', {number: number}, function(data) {
+					var table = data.table;
+					$('#result').prepend($('<h4>').text(number))
+					$('#table-header').append("Words")
+					for(var i = 0; i < table.length; i++)
+						$('#table-body').append($('<tr>').append($('<td>').append(document.createTextNode(table[i]))))
+				});
+			});
+		</script>
+	</body>
+</html>
